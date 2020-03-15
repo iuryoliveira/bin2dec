@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
-import './styles.css';
+import {
+    StyledForm,
+    BinaryTextInput,
+    Label
+  } from './styles'
 
 export default class Calculadora extends Component {
     state = {
@@ -10,7 +14,7 @@ export default class Calculadora extends Component {
     checkNumber = event => {
         const { value } = event.target;
         if(/[^01]/.test(value)) {
-            alert('Número inválido');
+            alert('Número informado inválido')
             return;
         }
         
@@ -20,13 +24,12 @@ export default class Calculadora extends Component {
     converter = () => {
         const { binario } = this.state;
 
-        let valorEntrada = binario.split("").reverse();
+        let valorEntrada = binario.split("").map(Number).reverse();
         let decimal = 0;
 
-        for(let i = 0; i < valorEntrada.length; i++) {
-            decimal += valorEntrada[i] * Math.pow(2, i);
-        }
+        if(!valorEntrada.length > 0) return;
 
+        decimal = valorEntrada.reduce((total, current, index) => total + current * Math.pow(2, index));
         this.setState({ decimal });
     }
 
@@ -34,10 +37,10 @@ export default class Calculadora extends Component {
         const { binario, decimal} = this.state;
 
         return (
-            <div className="form-calculadora">
-                <input type="text" id="binario" onChange={event => this.checkNumber(event)} onKeyUp={this.converter} maxLength="8" value={binario}/>
-                <p>{binario.length === 0 ? 0 : binario} em decimal é {decimal}</p>
-            </div>
+            <StyledForm>
+                <BinaryTextInput type="text" id="binario" onChange={event => this.checkNumber(event)} onKeyUp={this.converter} maxLength="8" value={binario}/>
+                <Label>{binario.length === 0 ? 0 : binario} em decimal é {decimal}</Label>
+            </StyledForm>
         )
     }
 }
